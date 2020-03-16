@@ -1,0 +1,643 @@
+mutex, semafori - controllo su risorse condivise da più threads
+synchronized - modificatore che non permette l'accesso o esecuzione a più thread;
+java.concurrent 
+modalità P2P - modalità publish and subscribe
+
+
+
+
+
+
+
+/* Interface ActionInterface - perform getDestription setEngine 
+ * 
+ * classe MenuIstance -Hashmap<String, Action Interface> menu, MenuEngine, name,il costruttore setta menuengine e nome
+ * addMenuItem(ActionInterface) setta l'engine dell'action e la aggiunge all'hashmap,
+ * un metodo che restituisce la action, un metodo che mostra il menu, uno che restituisce il nome del menu.
+ * 
+ * classe MenuEngine contiene una hashmap<String,MenuInstance>, una stringa startMenu, e una 
+ * MenuIstance currentMenu che definisce lo stato dell'engine, il costruttore setta lo startMenu,
+ * un metodo per inserire le MEnuIstance, un metodo che setta il menu corrente. 
+ * Il metodo startEngine preleva lo startMenu dal menuSet mostra le opzioni, legge da tastiera preleva dal
+ * current menu la action e la performa, restituiendo un booleano.
+ * 
+ *
+ * classe astratta AbstractAction che contiene tutte le cose in comune tra le varie actions: la description,
+ * una MenuInstance nextMenu e un MenuEngine me. Il costruttore setta la description e il nextMenu.
+ * Non implementa la perform.
+ * 
+ * Ci sono due tipologie di action, quelle di navigazione e quelle di esecuzione che implementano
+ * la nostra busyness logica. 
+ * 
+ * ExitAction che ha un costruttore con parametr la description che setta il nextMenu a null. e restituisce
+ * false nella perform.
+ * 
+ * NavigationAction che ugualmente ha un costruttore con parametri description e nextMenu e una 
+ * perform che setta il currentMenu dell'Engine con il nextMenu
+ * 
+ * Action di inserimento e ricerca
+ * 
+ * Il main(classe Archivio) costruisce le MenuIstance, aggiunge le action, costruisce l'engine, 
+ * li associa. Inoltre fa partire il Wrtier Thread, inizializza uno storage Manager
+ *  e fa partire il motore e infine Joina i threads.
+ * 
+ * Si può implementare un interfaccia per il motore  e separare le action operative da quelle di 
+ * navigazione. Chiedere per chiarimento.
+ * 
+ * 
+ * implementare il tutto separando le actions in due package separati, implementare un interfaccia per 
+ * il motore in modo da separare le istanze delle actions dal motore.
+ * */
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ ----------------------------------------------Reflection-------------------------------------------------------------------------
+ 
+ Possibilità di andare a vedere all'interno della classe, senza sapere in compile-time quale classe sia.
+ i tools sono la classe Class in java.lang e il package java.lang.reflect che introduce le classi Method,Constructor,Field,Modifier, Array.
+ Si usa per ottenere info su una classe e i suoi membri oppure su un java bena per manipolare gli oggetti.
+ 
+ Field consente di scoprire campi e settare valori.
+ Method consente di scoprire e invocare metodi
+ Constructor consente di creare nuovi oggetti.
+ Modifier
+ Array
+ 
+ 
+ Data la classe A per ottenere l'oggetto class che descrive la sua classe si scrive Class clazz=A.class
+ Il metodo getClass() di Object permette di ottenere l'istanza di class relativa al particolare oggetto.
+ forName() e newIstance() già visti.
+ 
+ Suggerimento: inserire costruttori vuoti nelle classi e i metodi di set più che richiamare costruttori con parametri 
+ via reflection;
+ 
+ 
+ --------------------------------------------Annotations----------------------------------------------------------------------------
+ 
+ @Override
+ 
+ tells the compiler that a method is overridden.
+ 
+ ----
+ @Deprecated
+ 
+ 
+ es.
+ /** *@Deprecated* reasons */
+ void deprecatedMethod(){
+ }
+ 
+ ----
+ @SuppressWarnings 
+ 
+ @SuppressWarnings("deprecated")
+ void method(){
+ 
+ myObject.deprecatedMethd();
+ }
+ ----
+ Custom Annotation
+ 
+ public @interface MyCustomAnnotation{
+ int count();
+ String[] args();
+ String name() default "ciao";
+ }
+ 
+ 
+ @MyCustomAnnotation{count=1,args={"C","salve"}}
+ public class MyClass{
+ }
+ 
+ 
+ ---
+ @Documented
+ @Target
+ @Inherited
+ @Retention
+ 
+ 
+ 
+ 
+ -------------------------------------------------Databases------------------------------------------------------------------------------------
+ 
+ Azienda---------->Sistema Organizzativo--------->Sistema Informativo---->Sistema Informatico;
+ 
+ Differenza tra Informazione e Dato. L'informazione deriva dall'elaborazione di dati.
+ 
+ I dati relativi all'informazione costituiscono il suo sottoinsieme minimo che la caratterizza.
+ 
+ 
+ I DBMS (Database management systems) gestiscono collezioni di dati:
+ grandi
+ persistenti
+ condivise
+ 
+ garantendo
+ 
+ privatezza:
+  -meccanismi di autorizzazione
+  -controllo della concorrenza
+  
+ affidabilità:
+  -resistenza a malfunzionamenti hardware e software---->la tecnica fondamentale : gestione delle Transazioni;
+  -Transazione: azione atomica ad esempio "Trasferimento da conto A a conto B".
+   -gestione delle Transazioni: o un'azione ha successo interamente o viene rollbackata.
+  -due transazioni concorrenti cioè che gestitscono la medesima risorsa devono essere gestite (posti liberi al cinema o in treno);
+ 
+ efficienza 
+  -
+ efficacia
+ 
+ 
+ 
+ -DB2 (usata perlopiù da banche)
+ -Oracle(resto dell'industria)
+ -SQLServer (di Microsoft per la media impresa)
+ -MySQL (open source)
+ -PostGreSQL (open source)
+ -Access 
+ -BigQuery 
+ 
+ Grandezza limite:
+ 500 Gb(dati Transazionali)
+ 10 Tb (dati decisionali)
+ 500 Tb (dati scientiici)
+ 
+In un database si dice "schema" la struttura della tabella, "istanza" la particolare tabella che addotta quello schema.
+
+
+Modelli logici( es relazionali . indipendenti dal sistema fisico)
+Modelli concettuali (es Entity-Relationship indipendenti dal sistema)
+
+
+Architettura dei DBMS:
+
+Utente
+   |
+   |
+   |
+Schema esterno (descrizione di parte della base dati: le "viste")
+   |
+   | indipendente da
+   |
+Schema logico (schema: struttura della tabella)
+   |
+   | indipendente da
+   |
+Schema interno (come la struttura della tabella viene salvata sul supporto fisico)
+   |
+   |
+   |
+Base Dati
+
+
+DML: data manipulation language (interrogare la base dati e aggiornarla)
+
+SELECT nome,cognome
+FROM studenti,sostenuti
+WHERE voto=30 AND studenti.matricola=sostenuti.matricola
+
+in generale il formato di una query select è:
+
+SELECT
+FROM
+WHERE
+GROUP BY
+HAVING
+ORDER BY
+
+----Select----
+
+SELECT * indica una selezione senza proiezione.
+per una proiezione senza selezione si omette la clausola WHERE
+la clausola SELECT DISTINCT elemina i duplicati
+SELECT Stipendio/12 As StipendioMensile; Stipendio/12 è un espressione e StipendioMensile è un alias per il nome della colonna.
+
+---Where---
+
+nella clausola WHERE si può mettere una disgiunzione o congiunzione con OR e AND; le condizioni complesse si mettono tra parentesi;
+si può anche mettere una inclusione con IN (insieme);
+si può utilizzare l'operatore LIKE per un uguaglianza debole:
+Es:
+WHERE cognome LIKE '_o%i'; _ indica un carattere qualsiasi, % una stringa qualsiasi.
+operatore BETWEEN: specifica con AND un intervallo; si può specificare anche con < o >;
+IS NULL indica se il valore è "null".
+
+
+---Order by---
+
+ORDER BY Stipendio DESC, cognome ASC (prima mette in ordine in base a Stipendio, e se ci sono più righe con lo stesso Stipendio, 
+queste vengono ordinate in base a Cognome)
+
+---From---
+
+si può fare una self-join e si può creare una colonna specificando un alias
+FROM Paternità, PERSONE P,PERSONE F
+
+--Operatori Aggregati---
+
+SELECT count(*) AS DipMilanesi
+FROM impiegato
+WHERE Dipart='Produzione'
+
+mi conta tutte le righe del risultato della query senza count(*)
+
+se il risultato è una tabella con più colonne si può specificare cosa contare: count(Stipendi)
+per non contare duplicati : count(DISTINCT Stipendi)
+!!! non conta i valori "null"
+
+altri operatori aggregati:
+
+MIN, MAX, SUM ,AVG;
+
+---Group By---
+
+SELECT Dipart, sum(Stipendio) AS TotaleStipendi
+FROM Impiegato
+GROUP BY Dipart
+
+--Having--
+
+SELECT nome,cognome
+FROM impiegato
+WHERE stipendio IN (SELECT MAX(Stipendio) FROM impiegato) ???
+
+DDL: data definition language (definire uno schema della base dati)
+
+Esempio:
+CREATE table orario(
+insegnamento CHAR(20),
+ora CHAR(5) )
+
+ -------------------------------------------------------Base dati per esercizio--------------------------------------------------------------
+
+Una tabella per CredenzialiUtente e DatiGenerali con chiave primaria un indice generato. Una tabella di svincolo che lega CredenzialiUtente 
+e DatiGenerali. Una tabella per ogni foglia che contiene tutte le altre info con referenza a CredenzialiUtente.
+
+Hibernate contiene un tool che da un modello di base dati genera le classi java.
+ 
+-------------------------------------------------------JDBC---------------------------------------------------------------------------------
+
+java.sql, è un insieme di classi e interfacce e lo sviluppatore di un DBMS tipicamente implementa i suoi driver specifici.
+
+per registrare il driver nel driver manager istanziare un oggetto driver;
+
+Java Application
+      |
+      |
+      |
+JDBC Driver Manager
+      |
+      |
+      |
+Driver specifici, bridges, JDBC middleware
+      |
+      |
+      |
+     DBMS 
+ 
+jdbc:postgresql://<IP>:5432/<database> è la stringa tipo per la connessione
+
+interfaccia Driver (implementata dallo sviluppatore del DBMS)
+classe DriverManager (il driver postgresql è nel package org.postgresql.Driver)
+Interfaccia Connection
+Interfaccia Statement
+Interfaccia PreparedStatement (query precompilate dove i parametri non sono specificati al momento della creazione dello statement. 
+                               Il paramentro mancante viene rimpiazzato con ?)
+Interfaccia Callable Statement (quey parametriche con parametri di input e output, consente di eseguire storedprocedure)
+Interfaccia ResultSet          (risultato query, elaborazione)
+
+Programmare applicaizone JDBC
+
+Importare Package
+Registrazione Driver
+Apertura Connessione
+Creazione oggetto Statement
+Esecuzione query
+utilizzo risultati
+chiusura oggetto result set e oggetto statement (eventualmente ricomincia)
+chiusura connessione
+
+Statement smt=conn.getStatement();
+ResultSet res=smt.executeQuery("SELECT .. ")
+rs.next() ritorna true se ci sono ancora righe.
+conn.close() chiude la connessione
+
+L'oggetto statement fornisce tre metodi per eseguire query:
+-executeQuery("..") statement Select
+-executeUpdate("...") statement Insert,Update,Delete oppure Create,Drop: nel caso DML restituisce un intero che è
+il numero di riche modificate, nel caso DDL restituisce sempre 0;
+
+-execute, con i metodi getResultSet(), getUpdateCount(), getMoreResult()
+
+
+
+Oggetto ResultSet con i metodi getXXX(column name) o getXXX(column number) dove XXX è Byte,Short,Int,Long.... oppure String,Bytes,Date etc..
+metodo wasNull()
+
+Oggetto PreparedStatment: PReparedStatement ps=conn.prepareStatement("...a=?.."), ps.setXXX(n,value) dove n è l'ordinale di "a" 
+all'interno dello statement e XXX è un tipo.
+
+
+
+references "..." on delete cascade;
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+class Properties e FILE
+
+QueryHandler(interfaccia) ha 2 metodi di update e select che restituiscono dei query set
+
+Query Element ha una stringa che è lo statement, un array di parametri(Object) getters e setters
+
+Il querySet estende la classe ArrayList<queryelement>
+
+Il DbstorageManager 
+
+
+---------------------------------------Design Pattern--------------------------------------------------------
+
+Libro: Design Patterns: elements of reusable object oriented software (1995)
+
+Design PAttern: descrizione di oggetti e classi comunicanti per risolvere un problema ricorrente di progettazione in un contesto specifico, 
+non complesso, astratto.
+
+Alcuni pattern: Abstract,Iterator, Factory, Decorator,State,Singleton,....
+
+Classificazione dei pattern:
+
+-Creazionali: riguardano la creazione di oggetti(es. Singleton)
+-Strutturali: hanno a che fare con la composizione di oggetti(Es. Adapter)
+-comportamentali: riguardano le relazioni che intercorrono tra gli oggetti (Es. Strategy)
+
+Creazionali:
+Abstract Factory: creazione di istanze di famiglie di classi
+Builder
+Factory Method
+Prototype
+Singleton
+
+Strutturali:
+Adapter
+Bridge
+Composite
+Decorator
+Facade
+Flyweight
+Proxy: un oggetto che rappresenta un altro oggetto e che permette pre e post elaborazione automatica
+quando vengono invocati i metodi dell'oggetto rappresentato.
+
+Comportamentali:
+Chain of Risp.
+Observer: un oggetto che osserva un'altro oggetto.
+State: Modifica il comportamento di un oggetto quando il suo stato cambia.
+
+
+ESEMPI:
+
+Singleton: vedi codice
+
+Adapt:
+A volte librerie diverse espongono interfacce diversa per fare la stessa cosa.
+Il client conosce l'interfaccia A, il vendor implementa un interfaccia B, l'adapter traduce A in B.
+
+Strategy: 
+un "comportamento" viene delegato ad un'altra classe. Individua una famiglia di algoritmi incapsulati in classi dedicate.
+(Esempio interfaccia Comparator)
+
+Decorator:
+consente di aggiungere funzionalità ad oggetti già esistenti a runtime.
+
+Facade:
+una serie di interfacce che si pongono davanti alla libreria, che permette un utilizzo semplificato.
+
+Observer: vedi publish and subscribe
+
+Pattern Architetturali:
+
+Client-Server
+Client-Server a tre livelli:
+
+
+   Presentation Layer
+          |
+          |
+          |
+      Logic layer (logica di Business)
+          |
+          |
+          |
+      Storage Layer
+
+
+Architettura p2p
+Model-View-Controller: per la progettazione di GUI. Si suddivide una GUI in tre componenti:
+                            -model : fornisce i metodi per accedere ai dati
+                            -view : visualizza i dati del model
+                            -controller : riceve i comandi dell'utente
+                            
+
+
+
+------------------------------------Estensione Web---------------------------------------------------------------------
+Il singleton ritorna sempre la stessa istanza dello storage manager, perchè i metodi write e read sono thread-safe
+la servlet si occupa di estrarre i dati dalla request e utilizzare lo storage manager
+
+
+
+------------HTML-----------------------------
+<font size="+2" face="Arial" color="red"></font> 
+
+<body bgcolor="red"></body>
+
+&#224=à (unicode)
+
+codifica RGB per colori standard. Es #ffff00 giallo; #ff0000 rosso;
+
+<p align="right></p>
+
+<h1></h1>
+...
+<h6></h6>
+
+<em></em> <i></i> <b></b> 
+
+<ul> elenco numerato
+<li> primo elemento </li>
+<li>secondo elemento </li>
+</li>
+
+<ol> elenco non numerato
+
+<dl> definizione
+<dt>
+<dt>
+
+<img src="path" width="" height="" alt="nome immagine come alternativa"/>
+
+<a target="_self,_parent,_top" href="url"></a> url assoluto o relativo alla pagina corrente
+
+<a name="qui></a>
+
+<a href="#qui"></a> 
+
+<a href="url#qui"></a> 
+
+<table border="1" cellpadding="" cellspacing="" width="80%">
+<tr colspan="" rowspan=""><th width="80%" >Anno</th><th width="20%">Vendite</th></tr>
+<tr><td align="left center right" valign="top midlle bottom" >2000</td><td>1010</td></tr>
+</table>
+
+-----------------CSS------------------------------
+
+Serve per separare la strutturazione dei contenuti dalla formattazione
+
+<head>
+<link rel="stylesheet" type="text/css" href="style.css"> (si può omettere type con html5)
+</head>
+
+<style>
+body { background: #FFFFCC; }
+</style>
+
+<tag html style="color: red; background: black"></tag html>
+
+per ogni elemento è possibile definire 3 colori, uno per layer( background foregound, border)
+
+
+in genere una regola CSS è costituita come:
+
+selettore {chiave: valore; chiave:valore; ...}
+
+ad esempio:
+
+h1 {color:red; background: blue}
+
+p{margin-top:10px;
+  margin-right:10px;
+  margin-left:10px;
+  margin-bottom:10px}
+oppure equivalentemente p{margin:10px 10 px 10px 10px}
+
+
+h1, h2, h3 {background: white;}
+
+p {background: white; font: 12px Verdana, arial, sans-serif;}
+table {width: 200px;}
+
+
+*{color:black} * è il selettore universale
+
+
+é possibile definire delle classi per raggruppare più caratteristiche in un sol nome:
+
+<style>
+
+.verde {color:green}
+h1.verde {color:green}
+
+</style>
+
+<h1 class="verde">la scritta sarà in verde </h1>
+<h1> la scritta non è in verde</h1>
+
+<style>
+
+#verde {color:green}
+</style>
+
+<h1 id="verde">la scritta sarà in verde </h1> l'id può essere usato una sola volta.
+
+
+Il contenitore <div>
+
+generic block level element, serve per creare layout utilizzando il BOX ELEMENT;
+
+--------------------HTML5------------------------------------
+ <!doctype html>
+ <meta charset="utf-8">
+ <script></script>
+ <link href="css/fogliodistileesterno.css" rel="stylesheet">
+ 
+ nuovi tag:
+ 
+ <header>
+ <nav>
+ <article>
+ <section>
+ <aside>
+ <footer>
+ 
+ per IE<8 che non riconosce i nuovi tag bisogna inserire del codice javascript
+ <!--[if IE]><script>document.createElement("header");</script><![endif]-->
+ 
+ oppure inserire l' HTML% enabling script di Remy Sharp
+ 
+ <!--[if lte IE 8]><script
+src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+e settare ogni tag come block level via css
+header, hgroup, nav, article, section, aside, footer { display: block; }
+
+
+nell'HTML5 i div servono solo per specificare particolari formattazioni nelle particolari sezioni(arcticle, header...)
+inoltre si possono definire aree linkabili più ampie con contenuti visivi
+
+nuovi input type per i form:
+-datetime e datetime local
+-number
+-range
+-search
+-email
+-url
+-color
+
+e tra gli attributi di questi troviamo:
+
+-required
+-autofocus
+-placeholder
+-pattern
+
+
+zkos - framework per collegare html con struttura java
+
+
+
+
+Exercise: dare una forma all'anagrafica web utilizzando CSS e html5, inserire controlli nel form con le opportune segnalazioni di errore
+
+-------------------------------------------------Application Servers---------------------------------------------------
+
+<resource-ref> tag serve per delegare l'application server a caricare la risorsa specificata
+
+-----------------------------------------------------Javascript e JQuery---------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+

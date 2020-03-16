@@ -1,0 +1,96 @@
+<div class="rowh">
+Utente
+</div>
+<form action="http://localhost:8080/AnagraficaWeb/StorageServlet" method="post">
+<div class="row">
+<div class="fieldName">
+<label for="Nome">Nome</label>
+</div>
+<div class="field">
+<input type="text" id="Nome" name="nome" placeholder="Es. Mario" required autofocus>
+
+</div>
+</div>
+
+
+
+<div class="row">
+<div class="fieldName">
+<label for="Cognome">Cognome</label>
+</div>
+<div class="field">
+<input type="text" name="cognome"  placeholder="Es. Rossi" required>
+</div>
+</div>
+
+
+
+<div class="row">
+<div class="fieldName">
+<label for="Materia">Materia</label>
+</div>
+<div class="field">
+<input type="text" name="materia"  placeholder="Es. Analisi 1" required>
+</div>
+</div>
+
+
+<div class="row">
+<div class="fieldName">
+<label for="cod_Fiscale">Codice Fiscale</label>
+</div>
+<div class="field">
+<input type="text" name="cod_fiscale" pattern="\w{6}[1-9][0-9]\w[1-9][0-9]\w[1-9][0-9]{2}\w"  placeholder="Es. MRORSI95T27D508N" required>
+</div>
+</div>
+
+<div class="row">
+<div class="fieldName">
+<label for="indirizzo">Indirizzo</label>
+</div>
+<div class="field">
+<input type="text" name="indirizzo"  placeholder="Es. Via Principe Amedeo 37" required>
+</div>
+</div>
+
+<div class="row">
+<div class="fieldName">
+<label for="citta">Citt&#224</label>
+</div>
+<div class="field">
+<input type="text" name="citta"  placeholder="Es. Pezze di Greco" required>
+</div>
+</div>
+
+<div class="row">
+<div class="fieldName">
+<label for="e-mail">e-mail</label>
+</div>
+<div class="field">
+<input type="email" name="mail"  placeholder="Es. mario.rossi@outlook.it" required>
+</div>
+</div>
+
+<div class="row">
+<div class="fieldName">
+<label for="username">Username</label>
+</div>
+<div class="field">
+<input type="text"  name="username" placeholder="Es. rossi95" required>
+</div>
+</div>
+
+
+<div class="row">
+<div class="fieldName">
+<label for="password">Password</label>
+</div>
+<div class="field">
+<input type="password" minlength="8" pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*\W)\S{8,}" name="password"  placeholder="Es. dcbe67qx79" required>
+</div>
+</div>
+<input type="hidden" name="type" value="corsojava.anagrafica.DatiUtente">
+<div class="row">
+<input type="submit" value="Inserisci">
+</div>
+</form>

@@ -1,0 +1,77 @@
+<div class="rowh">
+Azienda
+</div>
+<form action="http://localhost:8080/AnagraficaWeb/StorageServlet" method="post" >
+<div class="row">
+<div class="fieldName">
+<label for="Nome">Nome</label>
+</div>
+<div class="field">
+<input type="text" name="nome" placeholder="Es. GammaGrous Spa" required autofocus>
+</div>
+</div>
+
+
+<div class="row">
+<div class="fieldName">
+<label for="Partita Iva">Partita IVA</label>
+</div>
+<div class="field">
+<input type="text" name="piva"  placeholder="Es. 1029390201" required>
+</div>
+</div>
+
+
+<div class="row">
+<div class="fieldName">
+<label for="indirizzo">Indirizzo</label>
+</div>
+<div class="field">
+<input type="text" name="indirizzo"  placeholder="Es. Via Principe Amedeo 37" required>
+</div>
+</div>
+
+<div class="row">
+<div class="fieldName">
+<label for="citta">Citt&#224</label>
+</div>
+<div class="field">
+<input type="text" name="citta"  placeholder="Es. Pezze di Greco" required>
+</div>
+</div>
+
+<div class="row">
+<div class="fieldName">
+<label for="e-mail">e-mail</label>
+</div>
+<div class="field">
+<input type="email" name="mail"  placeholder="Es. mario.rossi@outlook.it" required>
+</div>
+</div>
+
+<div class="row">
+<div class="fieldName">
+<label for="username">Username</label>
+</div>
+<div class="field">
+<input type="text" name="username" placeholder="Es. rossi95" required>
+</div>
+</div>
+
+
+<div class="row">
+<div class="fieldName">
+<label for="password">Password</label>
+</div>
+<div class="field">
+<input type="password" minlength="8" pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*\W)\S{8,}" name="password"  placeholder="Es. dcbe67qx79" required>
+</div>
+</div>
+<input type="hidden" name="type" value="corsojava.anagrafica.DatiAzienda">
+
+<div class="row">
+<input  type="submit" value="Inserisci">
+</div>
+</form>
+
+</div>
