@@ -65,7 +65,8 @@ public class FileStorageManager implements StorageInterface {
 			for(Entry<String, String> ent: set){
 				key=ent.getKey();
 				value=ent.getValue();
-				if(!value.equals("") && value!=null) bw.write(key+"="+value+"\n");
+				if(value==null) throw new StorageException("the value corresponding to "+key+" hasn't been set properly");
+				if(!value.equals("")) bw.write(key+"="+value+"\n");
 			}
 		   }  
 		catch(Exception e){

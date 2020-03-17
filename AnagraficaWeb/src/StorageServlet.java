@@ -1,9 +1,11 @@
 
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import corsojava.storage.DataElement;
@@ -54,6 +57,7 @@ public class StorageServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
+		response.addHeader("Access-Control-Allow-Origin","http://localhost:4200");
 		String index=request.getParameter("index");
 		try {
 			DataInterface di=sm.readData(index);
@@ -74,20 +78,21 @@ public class StorageServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException{
 		// TODO Auto-generated method stub
-		try {
+		ObjectMapper objectMapper = new ObjectMapper();
+		try{
+	        String jsonBody=request.getReader().readLine();
+		    HashMap<String,String> bodyMap= objectMapper.readValue(jsonBody,new TypeReference<HashMap<String,String>>(){});
+		    
+		    //check bodyMap
+		    System.out.println("-----------body Received-------");
+		    System.out.println(bodyMap);
+		    System.out.println("-------------------------------");
+		    
 			DataElement de=new DataElement();
 			
 			
-			HashMap<String,String> hm=new HashMap<String,String>();
-			Enumeration<String> parameters=request.getParameterNames();
-			while(parameters.hasMoreElements()){
-				String key=parameters.nextElement();
-				String value=request.getParameter(key);
-				hm.put(key, value);
-			}
-			
-			DataInterface di=(DataInterface)Class.forName(request.getParameter("type")).newInstance();
-			de.setData(hm);
+			DataInterface di=(DataInterface)Class.forName(bodyMap.get("type")).newInstance();
+			de.setData(bodyMap);
 			di.setDataElement(de);
 			sm.writeData(di);
 		} catch (Exception e) {
