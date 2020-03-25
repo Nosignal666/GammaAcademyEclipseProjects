@@ -35,13 +35,13 @@ public class FileStorageManager implements StorageInterface {
 		File file=null;
 		BufferedWriter bw=null;
 		try {
-			Field id=Class.forName("strutturaDati.Entry").getDeclaredField("id");
-			id.setAccessible(true);
+			Field numeroFattura=Class.forName("strutturaDati.Entry").getDeclaredField("numeroFattura");
+			numeroFattura.setAccessible(true);
 			
 			Field[] entryFields=Class.forName("strutturaDati.Entry").getDeclaredFields();
 			for(Entry ent: az.entryList){
 				count=dir.list().length;
-				id.set(ent, Integer.toString(count));
+				numeroFattura.set(ent, Integer.toString(count));
 				file=new File(dirName+"\\"+Integer.toString(count)+".txt");
 				bw=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
 				for(Field f:entryFields){

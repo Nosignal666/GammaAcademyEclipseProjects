@@ -7,17 +7,19 @@ import java.util.StringTokenizer;
 import storage.DataElement;
 
 public class Azienda {
-	private String nome;
-	public ArrayList<Entry> entryList;
-	public Azienda(String nome, ArrayList<Entry> entryList) {
-		super();
-		this.nome = nome;
+	private String nomeAzienda;
+	private int[] partitaIva;
+	
+	
+	public Azienda(String nomeAzienda,int[] partitaIva, ArrayList<Entry> entryList){
+		this.nomeAzienda = nomeAzienda;
 		this.entryList = entryList;
+		this.partitaIva=partitaIva;
 	}
 	
-	public Azienda(String nome) {
-		super();
-		this.nome = nome;
+	public Azienda(String nomeAzienda,int[] partitaIva) {
+		this.nomeAzienda = nomeAzienda;
+		this.partitaIva=partitaIva;
 	}
 
 	public void addEntry(Entry entry){
@@ -27,10 +29,10 @@ public class Azienda {
 		this.entryList = entryList;
 	}
 	public String getNome() {
-		return nome;
+		return nomeAzienda;
 	}
-	public void setNome(String nome) {
-		this.nome = nome;
+	public int[] getPartitaIva(){
+		return this.partitaIva;
 	}
 	
 }
